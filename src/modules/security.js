@@ -418,7 +418,7 @@
             var backendValid = $el.valAttr('backend-valid'),
                 backendInvalid = $el.valAttr('backend-invalid'),
                 serverURL = document.location.href;
-
+       
             if($el.valAttr('url')) {
                 serverURL = $el.valAttr('url');
             } else if('serverURL' in conf) {
@@ -443,23 +443,27 @@
 
                 $el.addClass('validating-server-side');
                 $.formUtils.haltValidation = true;
+                
+                if(! $.formUtils.in_array($el.attr('name'), $.formUtils.xelements)) {
+                    $.formUtils.xelements.push($el.attr('name'));
+                
+                    requestServer(serverURL, $el, val, conf, function() {
 
-                requestServer(serverURL, $el, val, conf, function() {
+                        $form
+                            .removeClass('validating-server-side')
+                            .removeClass('on-blur')
+                            .get(0).onsubmit = function() {};
 
-                    $form
-                        .removeClass('validating-server-side')
-                        .removeClass('on-blur')
-                        .get(0).onsubmit = function() {};
+                        $form.unbind('submit', disableFormSubmit);
+                        $el.removeClass('validating-server-side');
 
-                    $form.unbind('submit', disableFormSubmit);
-                    $el.removeClass('validating-server-side');
+                        $el.valAttr('value-length', val.length);
 
-                    $el.valAttr('value-length', val.length);
-
-                    // fire submission again!
-                    $.formUtils.haltValidation = false;
-                    $form.trigger('submit');
-                });
+                        // fire submission again!
+                        $.formUtils.haltValidation = false;
+                        $form.trigger('submit');
+                    });
+                }
 
                 return null;
 
