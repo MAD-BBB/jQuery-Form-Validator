@@ -351,6 +351,9 @@
                 $element.valAttr('backend-valid', 'true');
               }
               else {
+                  var y = $.formUtils.xelements;
+                  y.splice( $.inArray($element.attr('name'), y), 1 );
+                                    
                 $element.valAttr('backend-invalid', 'true');
                 if (response.message) {
                   $element.attr(conf.validationErrorMsgAttribute, response.message);
@@ -418,7 +421,7 @@
             var backendValid = $el.valAttr('backend-valid'),
                 backendInvalid = $el.valAttr('backend-invalid'),
                 serverURL = document.location.href;
-       
+
             if($el.valAttr('url')) {
                 serverURL = $el.valAttr('url');
             } else if('serverURL' in conf) {
@@ -444,7 +447,7 @@
                 $el.addClass('validating-server-side');
                 $.formUtils.haltValidation = true;
                 
-                if(! $.formUtils.in_array($el.attr('name'), $.formUtils.xelements)) {
+                if( -1 === $.inArray($el.attr('name'), $.formUtils.xelements)) {
                     $.formUtils.xelements.push($el.attr('name'));
                 
                     requestServer(serverURL, $el, val, conf, function() {

@@ -13,18 +13,6 @@
 
     xelements: [],
 
-    in_array : function (needle, haystack, strict) {
-                    var found = false, key, strict2 = !!strict;
-
-                    for (key in haystack) {
-                        if ((strict2 && haystack[key] === needle) || (!strict2 && haystack[key] === needle)) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    return found;
-                },
-
     /**
      * Default config for $(...).isValid();
      */
